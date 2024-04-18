@@ -79,7 +79,7 @@ export default function Signup() {
             </h6>
             <p className="text-sm text-[grey]">
               Lorem ipsum dolor sit amet, consectetur adipisicing elit. Natus,
-              veniam?<br /><Link to='/' className="underline text-sm">Chekout Products</Link>
+              veniam?<br /><Link to='/' className="underline text-sm">Chekout Todo's</Link>
             </p>
             <form action="" className="mt-8" onSubmit={loginUser}>
               <div className="bg-[#2c2c38] h-[45px] w-[full] flex mt-3 rounded-lg">
