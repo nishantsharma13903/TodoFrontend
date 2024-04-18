@@ -160,7 +160,7 @@ export default function HomePage() {
         </div>
       </div>
       <div className="flex justify-center mt-10">
-        <div className="bg-[#424242] w-[90%] md:p-6 p-2 md:h-[600px] h-auto md:overflow-y-auto">
+        <div className="bg-[#424242] w-[90%] md:p-6 p-2 md:h-[600px] h-[85vh] md:overflow-y-auto">
           <div className="flex md:flex-row flex-col md:gap-10 gap-6 justify-end p-4 mr-16">
             <div className="">
               <input

@@ -138,11 +138,12 @@ export default function Signup() {
                     required
                   />
                 </div>
-                <div className="text-end mt-2 text-xs px-2 absolute right-0 -top-2 text-white border-l h-full flex items-center rounded-md cursor-pointer hover:shadow-sm">
+                <div className="text-end mt-2 text-xs px-2 absolute right-0 -top-2 text-white border-l h-full flex items-center rounded-md cursor-pointer hover:shadow-sm bg-[#2c2c38]">
                   <button
                     type="button"
                     onClick={generateOtp}
                     disabled={disableBtnOtp}
+                    className=""
                   >
                     {disableBtnOtp ? (
                       <CircularLoader col="white" />

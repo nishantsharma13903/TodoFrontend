@@ -3,7 +3,7 @@ import girlWithLaptop from "../assets/images/full-shot-man-working-night.jpg";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css';
+import "react-toastify/dist/ReactToastify.css";
 import CircularLoader from "../components/loading/CircularLoader";
 
 export default function ForgotPassword() {
@@ -31,56 +31,61 @@ export default function ForgotPassword() {
     }));
   };
 
-
-  const updatePassword = async(e) => {
-    e.preventDefault()
-    console.log(formData)
+  const updatePassword = async (e) => {
+    e.preventDefault();
+    console.log(formData);
     try {
-        toast("Processing... ")
-        setDisableBtnPass(true);
-        const response = await axios.post('https://todobackend-5twl.onrender.com/api/v1/users/forgot-password',formData);
-        console.log("Server Response",response.data);
-        if(response.data.success){
-            toast(response.data.message)
-            navigate('/login')
-        }
+      toast("Processing... ");
+      setDisableBtnPass(true);
+      const response = await axios.post(
+        "https://todobackend-5twl.onrender.com/api/v1/users/forgot-password",
+        formData
+      );
+      console.log("Server Response", response.data);
+      if (response.data.success) {
+        toast(response.data.message);
+        navigate("/login");
+      }
     } catch (error) {
-        console.log(error);
-            toast(error?.response?.data?.message)
+      console.log(error);
+      toast(error?.response?.data?.message);
     }
     setFormData({
-        email: "",
-        otp: "",
-        newPassword: "",
-      })
-      setDisableBtnPass(false);
-  }
+      email: "",
+      otp: "",
+      newPassword: "",
+    });
+    setDisableBtnPass(false);
+  };
 
-  const generateOtp = async() => {
+  const generateOtp = async () => {
     try {
-        if(!formData.email){
-            toast("Email is required to generate OTP");
-            return
+      if (!formData.email) {
+        toast("Email is required to generate OTP");
+        return;
+      }
+      toast("Sending OTP ...");
+      setDisableBtnOtp(true);
+      const response = await axios.post(
+        "https://todobackend-5twl.onrender.com/api/v1/users/generate-otp-forgot-password",
+        {
+          email: formData.email,
         }
-        toast("Sending OTP ..." );
-        setDisableBtnOtp(true);
-        const response = await axios.post('https://todobackend-5twl.onrender.com/api/v1/users/generate-otp-forgot-password',{
-            email : formData.email
-        })
-        console.log("Server Response",response);
-        if(response.data.success){
-            toast(response.data.message);
-        }
+      );
+      console.log("Server Response", response);
+      if (response.data.success) {
+        toast(response.data.message);
+      }
     } catch (error) {
-        console.log(error.response.data)
-            toast(error?.response?.data?.message)
+      console.log(error.response.data);
+      toast(error?.response?.data?.message);
     }
     setDisableBtnOtp(false);
-  }
+  };
 
   return (
     <div className="flex justify-center items-center h-screen bg-[#303030]">
-        <ToastContainer />
+      <ToastContainer />
       <div className="bg-white flex shadow-lg  md:rounded-xl rounded-none">
         <div
           className="rounded-tl-xl rounded-bl-xl hidden md:block"
@@ -107,7 +112,7 @@ export default function ForgotPassword() {
               veniam?
             </p>
             <form action="" className="mt-8" onSubmit={updatePassword}>
-            <div className="relative">
+              <div className="relative">
                 <div className="bg-[#2c2c38] h-[45px] w-[full] flex mt-3 rounded-lg">
                   <i className="fa fa-envelope text-white w-[50px] flex justify-center items-center"></i>
                   <input
@@ -120,11 +125,17 @@ export default function ForgotPassword() {
                     required
                   />
                 </div>
-                <div className="text-end mt-2 text-xs px-2 absolute right-0 -top-2 text-white border-l h-full flex items-center rounded-md cursor-pointer hover:shadow-sm">
-                  <button type="button" disabled={disableBtnOtp} onClick={generateOtp}>
-                    {
-                      disableBtnOtp? <CircularLoader col="white" /> : "Send OTP"
-                    }
+                <div className="text-end mt-2 text-xs px-2 absolute right-0 -top-2 text-white border-l h-full flex items-center rounded-md cursor-pointer hover:shadow-sm bg-[#2c2c38]">
+                  <button
+                    type="button"
+                    disabled={disableBtnOtp}
+                    onClick={generateOtp}
+                  >
+                    {disableBtnOtp ? (
+                      <CircularLoader col="white" />
+                    ) : (
+                      "Send OTP"
+                    )}
                   </button>
                 </div>
               </div>
@@ -158,9 +169,11 @@ export default function ForgotPassword() {
                   type="submit"
                   disabled={disableBtnPass}
                 >
-                  {
-                    disableBtnPass? <CircularLoader col="white" /> : "Update Password"
-                  }
+                  {disableBtnPass ? (
+                    <CircularLoader col="white" />
+                  ) : (
+                    "Update Password"
+                  )}
                 </button>
               </div>
             </form>
