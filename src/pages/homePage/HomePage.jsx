@@ -75,6 +75,7 @@ export default function HomePage() {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       };
+      toast("Updating ...");
       const response = await axios.put(
         `https://todobackend-5twl.onrender.com/api/v1/todos/update-todo-status/${id}`,
         { completed: status },
