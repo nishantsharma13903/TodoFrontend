@@ -25,7 +25,6 @@ export default function Signup() {
   }, []);
 
   const handleInputChange = (e) => {
-    console.log(e.target.name, " : ", e.target.value);
     setFormData((prevData) => ({
       ...prevData,
       [e.target.name]: e.target.value,
@@ -34,7 +33,6 @@ export default function Signup() {
 
   const signupUser = async (e) => {
     e.preventDefault();
-    console.log(formData);
     try {
       if (!terms) {
         toast("Please Accept Terms & Conditions");
@@ -42,12 +40,10 @@ export default function Signup() {
       }
       toast("Processing ... ");
       setDisableBtnSign(true);
-      console.log("object", formData)
       const response = await axios.post(
         "https://todobackend-5twl.onrender.com/api/v1/users/signup",
         formData
       );
-      console.log("Server Response", response);
       if (response?.data?.success) {
         toast(response.data.message);
         sessionStorage.setItem("todoToken", response.data.data.accessToken);
@@ -79,12 +75,10 @@ export default function Signup() {
           email: formData.email,
         }
       );
-      console.log("Server Response", response);
       if (response.data.success) {
         toast(response.data.message);
       }
     } catch (error) {
-      console.log(error.response.data);
       if (!error.response.data.success) {
         console.log(error);
         toast(error.response.data.message);

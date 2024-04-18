@@ -16,6 +16,8 @@ export default function HomePage() {
 
   useEffect(() => {
     getAllUserTodos();
+    window.scrollTo(0, 0);
+    window.document.title = "HomePage | Todo";
   }, []);
 
   useEffect(() => {
@@ -50,16 +52,12 @@ export default function HomePage() {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       };
-      console.log("working");
       const response = await axios.get(
         "https://todobackend-5twl.onrender.com/api/v1/todos/get-user-todos",
         { headers }
       );
 
-      console.log("server response: ", response);
-
       if (response?.data?.statusCode === 200) {
-        console.log("I have been called");
         setTodos(response.data.data);
         setAllTodos(response.data.data);
       }
@@ -72,19 +70,16 @@ export default function HomePage() {
   const updateTodoStatus = async (id, stat) => {
     try {
       const status = stat === "Completed" ? true : false;
-      console.log(id, stat);
       const token = sessionStorage.getItem("todoToken");
       const headers = {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       };
-      console.log(status);
       const response = await axios.put(
         `https://todobackend-5twl.onrender.com/api/v1/todos/update-todo-status/${id}`,
         { completed: status },
         { headers }
       );
-      console.log("server response: ", response);
       if (response.data.statusCode === 200) {
         getAllUserTodos();
       }
@@ -108,7 +103,6 @@ export default function HomePage() {
         `https://todobackend-5twl.onrender.com/api/v1/todos/delete-todo/${id}`,
         { headers }
       );
-      console.log("server response: ", response);
       if (response.data.statusCode === 200) {
         getAllUserTodos();
       }
@@ -160,7 +154,7 @@ export default function HomePage() {
         </div>
       </div>
       <div className="flex justify-center mt-10">
-        <div className="bg-[#424242] w-[90%] md:p-6 p-2 md:h-[600px] h-[85vh] md:overflow-y-auto">
+        <div className="bg-[#424242] w-[90%] md:p-6 p-2 md:h-[600px] h-[82vh] md:overflow-y-auto">
           <div className="flex md:flex-row flex-col md:gap-10 gap-6 justify-end p-4 mr-16">
             <div className="">
               <input

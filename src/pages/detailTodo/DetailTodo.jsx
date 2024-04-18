@@ -31,8 +31,6 @@ export default function DetailTodo(Props) {
         { headers }
       );
 
-      console.log("server response: ", response);
-
       if (response.data.statusCode === 200) {
         setFormData(response?.data?.data)
       }

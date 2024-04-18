@@ -22,7 +22,6 @@ export default function Signup() {
   },[])
 
   const handleInputChange = (e) => {
-    console.log(e.target.name, " : ", e.target.value);
     setFormData((prevData) => ({
       ...prevData,
       [e.target.name]: e.target.value,
@@ -31,12 +30,10 @@ export default function Signup() {
 
   const loginUser = async (e) => {
     e.preventDefault();
-    console.log(formData);
     try {
       toast("Checking Credentails ...")
       setDisableBtn(true);
       const response = await axios.post("https://todobackend-5twl.onrender.com/api/v1/users/login", formData);
-      console.log("Server Response", response.data);
       if (response.data.success) {
         toast(response.data.message);
         sessionStorage.setItem('todoToken',response.data.data.accessToken)

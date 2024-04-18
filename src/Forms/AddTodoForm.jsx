@@ -38,11 +38,9 @@ export default function AddTodoForm(Props) {
         { headers }
       );
 
-      console.log("server response: ", response);
 
       if (response.data.statusCode === 200) {
         toast.success(response?.data.message);
-        console.log(response?.data.message);
         Props.getAllUserTodos();
         close();
       }

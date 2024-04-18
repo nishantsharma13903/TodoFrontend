@@ -24,7 +24,6 @@ export default function ForgotPassword() {
   }, []);
 
   const handleInputChange = (e) => {
-    console.log(e.target.name, " : ", e.target.value);
     setFormData((prevData) => ({
       ...prevData,
       [e.target.name]: e.target.value,
@@ -33,7 +32,6 @@ export default function ForgotPassword() {
 
   const updatePassword = async (e) => {
     e.preventDefault();
-    console.log(formData);
     try {
       toast("Processing... ");
       setDisableBtnPass(true);
@@ -41,7 +39,6 @@ export default function ForgotPassword() {
         "https://todobackend-5twl.onrender.com/api/v1/users/forgot-password",
         formData
       );
-      console.log("Server Response", response.data);
       if (response.data.success) {
         toast(response.data.message);
         navigate("/login");
@@ -72,12 +69,11 @@ export default function ForgotPassword() {
           email: formData.email,
         }
       );
-      console.log("Server Response", response);
       if (response.data.success) {
         toast(response.data.message);
       }
     } catch (error) {
-      console.log(error.response.data);
+      console.log(error);
       toast(error?.response?.data?.message);
     }
     setDisableBtnOtp(false);
