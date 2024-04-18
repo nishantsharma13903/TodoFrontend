@@ -1,20 +1,28 @@
-import React, { useState } from "react";
-import girlWithLaptop from '../assets/images/full-shot-man-working-night.jpg'
+import React, { useEffect, useState } from "react";
+import girlWithLaptop from "../assets/images/full-shot-man-working-night.jpg";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import CircularLoader from "../components/loading/CircularLoader";
 
 export default function Signup() {
   const [formData, setFormData] = useState({
-    userName: "",
     email: "",
     otp: "",
     password: "",
   });
   const [terms, setTerms] = useState(false);
 
-  const navigate = useNavigate('');
+  const [disableBtnOtp, setDisableBtnOtp] = useState(false);
+  const [disableBtnSign, setDisableBtnSign] = useState(false);
+
+  const navigate = useNavigate("");
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    window.document.title = "Signup | Todo";
+  }, []);
 
   const handleInputChange = (e) => {
     console.log(e.target.name, " : ", e.target.value);
@@ -33,25 +41,28 @@ export default function Signup() {
         return;
       }
       toast("Processing ... ");
-      const response = await axios.post("/api/v1/users/signup", formData);
-      console.log("Server Response", response.data);
-      if (response.data.success) {
+      setDisableBtnSign(true);
+      console.log("object", formData)
+      const response = await axios.post(
+        "https://todobackend-5twl.onrender.com/api/v1/users/signup",
+        formData
+      );
+      console.log("Server Response", response);
+      if (response?.data?.success) {
         toast(response.data.message);
-        sessionStorage.setItem("eToken", response.data.data.accessToken);
-        navigate('/')
+        sessionStorage.setItem("todoToken", response.data.data.accessToken);
+        navigate("/");
       }
     } catch (error) {
       console.log(error);
-      if (!error.response.data.success) {
-        toast(error.response.data.message);
-      }
+      toast(error?.response?.data?.message);
     }
     setFormData({
-      userName: "",
       email: "",
       otp: "",
       password: "",
     });
+    setDisableBtnSign(false);
   };
 
   const generateOtp = async () => {
@@ -61,9 +72,13 @@ export default function Signup() {
         return;
       }
       toast("Sending OTP ...");
-      const response = await axios.post("/api/v1/users/generate-otp", {
-        email: formData.email,
-      });
+      setDisableBtnOtp(true);
+      const response = await axios.post(
+        "https://todobackend-5twl.onrender.com/api/v1/users/generate-otp",
+        {
+          email: formData.email,
+        }
+      );
       console.log("Server Response", response);
       if (response.data.success) {
         toast(response.data.message);
@@ -71,9 +86,11 @@ export default function Signup() {
     } catch (error) {
       console.log(error.response.data);
       if (!error.response.data.success) {
+        console.log(error);
         toast(error.response.data.message);
       }
     }
+    setDisableBtnOtp(false);
   };
 
   return (
@@ -102,21 +119,12 @@ export default function Signup() {
             </h6>
             <p className="text-sm text-[grey]">
               Lorem ipsum dolor sit amet, consectetur adipisicing elit. Natus,
-              veniam? <br /><Link to='/' className="underline text-sm">Chekout ToDo's</Link>
+              veniam? <br />
+              <Link to="/" className="underline text-sm">
+                Chekout ToDo's
+              </Link>
             </p>
             <form action="" className="mt-8" onSubmit={signupUser}>
-              <div className="bg-[#2c2c38] h-[45px] flex rounded-lg">
-                <i className="fa fa-user text-white w-[50px] flex justify-center items-center"></i>
-                <input
-                  type="text"
-                  className="bg-[transparent] w-full text-white outline-none pl-3 text-sm"
-                  value={formData.userName}
-                  name="userName"
-                  onChange={handleInputChange}
-                  placeholder="User Name"
-                  required
-                />
-              </div>
               <div className="relative">
                 <div className="bg-[#2c2c38] h-[45px] w-[full] flex mt-3 rounded-lg">
                   <i className="fa fa-envelope text-white w-[50px] flex justify-center items-center"></i>
@@ -131,8 +139,16 @@ export default function Signup() {
                   />
                 </div>
                 <div className="text-end mt-2 text-xs px-2 absolute right-0 -top-2 text-white border-l h-full flex items-center rounded-md cursor-pointer hover:shadow-sm">
-                  <button type="button" onClick={generateOtp}>
-                    Send OTP
+                  <button
+                    type="button"
+                    onClick={generateOtp}
+                    disabled={disableBtnOtp}
+                  >
+                    {disableBtnOtp ? (
+                      <CircularLoader col="white" />
+                    ) : (
+                      "Send OTP"
+                    )}
                   </button>
                 </div>
               </div>
@@ -174,7 +190,7 @@ export default function Signup() {
                 />
                 <p className="ml-2 text-sm accent-[#0b3b72]">
                   I agree to all statements with{" "}
-                  <Link to='' className="text-[#0b3b72] font-medium">
+                  <Link to="" className="text-[#0b3b72] font-medium">
                     Terms of Use
                   </Link>
                 </p>
@@ -183,8 +199,9 @@ export default function Signup() {
                 <button
                   className="bg-[#0b3b72] text-white w-full py-3 rounded-lg"
                   type="submit"
+                  disabled={disableBtnSign}
                 >
-                  SignUp Now
+                  {disableBtnSign ? <CircularLoader col="white" /> : "Sign Up"}
                 </button>
               </div>
             </form>

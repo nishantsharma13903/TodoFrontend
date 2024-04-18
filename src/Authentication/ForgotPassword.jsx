@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import girlWithLaptop from "../assets/images/full-shot-man-working-night.jpg";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import CircularLoader from "../components/loading/CircularLoader";
 
 export default function ForgotPassword() {
   const [formData, setFormData] = useState({
@@ -12,7 +13,15 @@ export default function ForgotPassword() {
     newPassword: "",
   });
 
-  const navigate = useNavigate('');
+  const [disableBtnOtp, setDisableBtnOtp] = useState(false);
+  const [disableBtnPass, setDisableBtnPass] = useState(false);
+
+  const navigate = useNavigate("");
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    window.document.title = "Forgot Password | Todo";
+  }, []);
 
   const handleInputChange = (e) => {
     console.log(e.target.name, " : ", e.target.value);
@@ -28,7 +37,8 @@ export default function ForgotPassword() {
     console.log(formData)
     try {
         toast("Processing... ")
-        const response = await axios.post('/api/v1/users/forgot-password',formData);
+        setDisableBtnPass(true);
+        const response = await axios.post('https://todobackend-5twl.onrender.com/api/v1/users/forgot-password',formData);
         console.log("Server Response",response.data);
         if(response.data.success){
             toast(response.data.message)
@@ -36,15 +46,14 @@ export default function ForgotPassword() {
         }
     } catch (error) {
         console.log(error);
-        if(!(error.response.data.success)){
-            toast(error.response.data.message)
-        }
+            toast(error?.response?.data?.message)
     }
     setFormData({
         email: "",
         otp: "",
         newPassword: "",
       })
+      setDisableBtnPass(false);
   }
 
   const generateOtp = async() => {
@@ -54,7 +63,8 @@ export default function ForgotPassword() {
             return
         }
         toast("Sending OTP ..." );
-        const response = await axios.post('/api/v1/users/generate-otp-forgot-password',{
+        setDisableBtnOtp(true);
+        const response = await axios.post('https://todobackend-5twl.onrender.com/api/v1/users/generate-otp-forgot-password',{
             email : formData.email
         })
         console.log("Server Response",response);
@@ -63,10 +73,9 @@ export default function ForgotPassword() {
         }
     } catch (error) {
         console.log(error.response.data)
-        if(!(error.response.data.success)){
-            toast(error.response.data.message)
-        }
+            toast(error?.response?.data?.message)
     }
+    setDisableBtnOtp(false);
   }
 
   return (
@@ -112,7 +121,11 @@ export default function ForgotPassword() {
                   />
                 </div>
                 <div className="text-end mt-2 text-xs px-2 absolute right-0 -top-2 text-white border-l h-full flex items-center rounded-md cursor-pointer hover:shadow-sm">
-                  <button type="button" onClick={generateOtp}>Send OTP</button>
+                  <button type="button" disabled={disableBtnOtp} onClick={generateOtp}>
+                    {
+                      disableBtnOtp? <CircularLoader col="white" /> : "Send OTP"
+                    }
+                  </button>
                 </div>
               </div>
               <div className="bg-[#2c2c38] h-[45px] flex mt-3 rounded-lg">
@@ -143,8 +156,11 @@ export default function ForgotPassword() {
                 <button
                   className="bg-[#0b3b72] text-white w-full py-3 rounded-lg"
                   type="submit"
+                  disabled={disableBtnPass}
                 >
-                  Update Password
+                  {
+                    disableBtnPass? <CircularLoader col="white" /> : "Update Password"
+                  }
                 </button>
               </div>
             </form>

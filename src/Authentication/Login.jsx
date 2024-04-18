@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import girlWithLaptop from '../assets/images/full-shot-man-working-night.jpg'
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import CircularLoader from "../components/loading/CircularLoader";
 
 export default function Signup() {
   const [formData, setFormData] = useState({
@@ -11,7 +12,14 @@ export default function Signup() {
     password: "",
   });
 
+  const [disableBtn,setDisableBtn] = useState(false);
+
   const navigate = useNavigate('');
+
+  useEffect(()=>{
+    window.scrollTo(0, 0);
+    window.document.title = "Login | Todo";
+  },[])
 
   const handleInputChange = (e) => {
     console.log(e.target.name, " : ", e.target.value);
@@ -26,23 +34,23 @@ export default function Signup() {
     console.log(formData);
     try {
       toast("Checking Credentails ...")
-      const response = await axios.post("/api/v1/users/login", formData);
+      setDisableBtn(true);
+      const response = await axios.post("https://todobackend-5twl.onrender.com/api/v1/users/login", formData);
       console.log("Server Response", response.data);
       if (response.data.success) {
         toast(response.data.message);
-        sessionStorage.setItem('eToken',response.data.data.accessToken)
+        sessionStorage.setItem('todoToken',response.data.data.accessToken)
         navigate('/');
       }
     } catch (error) {
       console.log(error);
-      if (!error.response.data.success) {
-        toast(error.response.data.message);
-      }
+        toast(error?.response?.data?.message);
     }
     setFormData({
         email: "",
         password: "",
       })
+      setDisableBtn(false);
   };
 
   return (
@@ -103,8 +111,11 @@ export default function Signup() {
                 <button
                   className="bg-[#0b3b72] text-white w-full py-3 rounded-lg"
                   type="submit"
+                  disabled={disableBtn}
                 >
-                  Login Now
+                  {
+                    disableBtn ? <CircularLoader col="white" /> : "Login Now"
+                  }
                 </button>
               </div>
             </form>
